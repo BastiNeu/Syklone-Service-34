@@ -1,305 +1,198 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verkaufsseite</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Syklon — Performance Tools für FiveM</title>
+  <meta name="description" content="Syklon — Tools zur Performance-Optimierung, Monitoring und Stabilität für FiveM-Server. Elegant, minimal, lila-glow." />
   <style>
-    :root {
-      --primary: lab(44.71% 84.63 -84.09);
-      --accent: #b509e9;
-      --bg: ##8c00ff;
-      --menu-bg: rgb(0, 0, 0);
-      --card-bg: #b509e936;
-      --text: #f0f4fc;
-      --radius: 18px;
-      --shadow: 0 4px 16px rgba(30,144,255,0.10);
-      --transition: 0.3s cubic-bezier(.25,.8,.25,1);
-      --icon-bg: linear-gradient(135deg, #1e90ff 60%, #10b981 100%);
+    /* --- Farben & Grund --- */
+    :root{
+      --bg-dark: #0b0210;
+      --panel: rgba(255,255,255,0.03);
+      --muted: #bfb7d6;
+      --accent-1: #8a4dff;
+      --accent-2: #5f29d6;
+      --glass: rgba(255,255,255,0.04);
+      --radius: 14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      margin: 0;
-      min-height: 100vh;
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-dark) 0%, #0a0510 60%);color:#fff;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    /* --- Header --- */
+    header{display:flex;align-items:center;justify-content:space-between;padding:26px 6%;position:relative;z-index:5}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:48px;height:48px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:18px;box-shadow:0 8px 30px rgba(95,41,214,0.18);
     }
-    header {
-      background: var(--menu-bg);
-      box-shadow: var(--shadow);
-      border-radius: 0 0 var(--radius) var(--radius);
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    .brand .title{font-weight:700;font-size:18px;letter-spacing:0.6px}
+    nav{display:flex;gap:20px;align-items:center}
+    nav a{color:var(--muted);font-weight:600;font-size:14px;padding:8px 12px;border-radius:10px}
+    nav a:hover{color:#fff}
+    .cta-join{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));padding:10px 16px;border-radius:999px;font-weight:700;box-shadow:0 8px 30px rgba(138,77,255,0.16)}
+    /* --- Hero --- */
+    .hero{max-width:1160px;margin:40px auto 0;padding:60px 6% 80px;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+    .hero-grid {
+      position:absolute;inset:0;opacity:0.08;background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px;
+      transform: translateY(-10%);
+      border-radius:24px;pointer-events:none;
     }
-    .logo {
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--primary);
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
+    .hero .badge{display:inline-block;padding:8px 14px;border-radius:999px;background:linear-gradient(90deg, rgba(138,77,255,0.12), rgba(95,41,214,0.08));color:var(--accent-1);font-weight:700;font-size:13px}
+    h1{font-size:56px;line-height:1.02;margin:8px 0;color:linear-gradient(90deg,#fff,#eee)} 
+    /* fallback plain color, gradient via overlay below */
+    .hero h1 strong{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    p.lead{max-width:860px;color:var(--muted);font-size:16px;margin:0 auto}
+    .hero-ctas{display:flex;gap:14px;margin-top:18px}
+    .btn{padding:12px 18px;border-radius:12px;font-weight:700;border:none;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:white;box-shadow:0 14px 40px rgba(95,41,214,0.18)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    /* subtle glow under hero */
+    .glow{width:70%;height:36px;border-radius:999px;background:radial-gradient(circle at 50% 50%, rgba(138,77,255,0.22), rgba(95,41,214,0.06) 40%, transparent 70%);filter:blur(18px);margin-top:36px}
+    /* --- Showcase mockup --- */
+    .showcase{width:92%;max-width:1100px;margin:36px auto 0;border-radius:18px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:0 30px 60px rgba(4,4,6,0.45);border:1px solid rgba(255,255,255,0.03)}
+    .mock {height:260px;border-radius:12px;background:linear-gradient(180deg,#0f0c14, #0a0810);display:flex;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.02)}
+    .mock .left {width:240px;padding:20px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-right:1px solid rgba(255,255,255,0.02)}
+    .mock .left h4{margin:0 0 8px;font-size:15px;color:var(--muted)}
+    .mock .left .item{margin:10px 0;padding:8px;border-radius:10px;background:rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
+    .mock .content{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;justify-content:center}
+    .stat-row{display:flex;gap:12px}
+    .stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;min-width:140px}
+    .stat strong{display:block;font-size:20px}
+    /* --- Features --- */
+    .features{max-width:1100px;margin:48px auto;padding:0 6%;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .feature{background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .feature h5{margin:0 0 8px;font-size:16px}
+    .feature p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+    /* --- Footer --- */
+    footer{margin-top:60px;padding:28px 6%;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid rgba(255,255,255,0.02)}
+    /* --- small screens --- */
+    @media (max-width:880px){
+      h1{font-size:34px}
+      .mock{height:220px}
+      header{padding:18px}
+      .hero{padding:40px 6% 60px}
     }
-    nav {
-      display: flex;
-      gap: 1.5em;
-      font-weight: 500;
-    }
-    nav a {
-      color: var(--text);
-      text-decoration: none;
-      padding: 0.5em 1em;
-      border-radius: var(--radius);
-      transition: background var(--transition), color var(--transition);
-    }
-    nav a:hover {
-      background: var(--primary);
-      color: #fff;
-    }
-    main {
-      max-width: 1400px;
-      margin: 2rem auto;
-      padding: 1rem;
-      display: grid;
-      gap: 2rem;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      align-items: stretch;
-    }
-    .product-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2rem 1.3rem 1.5rem 1.3rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1em;
-      transition: transform var(--transition), box-shadow var(--transition);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      animation: fadeInUp 0.7s forwards;
-    }
-    .product-card { animation-delay: 0.1s; }
-    .product-card:nth-child(2) { animation-delay: 0.2s; }
-    .product-card:nth-child(3) { animation-delay: 0.3s; }
-    .product-card:nth-child(4) { animation-delay: 0.4s; }
-    @keyframes fadeInUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .product-icon {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--icon-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(30,144,255,0.20);
-      transition: background var(--transition), box-shadow var(--transition);
-      margin-bottom: 0.7em;
-    }
-    .product-card:hover .product-icon {
-      background: linear-gradient(135deg, #10b981 30%, #1e90ff 100%);
-      box-shadow: 0 0 18px #1e90ff55;
-    }
-    .product-title {
-      font-size: 1.20rem;
-      font-weight: 700;
-      margin-bottom: 0.35em;
-      text-align: center;
-      color: var(--text);
-      text-shadow: 0 2px 8px #1e90ff22;
-    }
-    .product-desc {
-      font-size: 1.05rem;
-      color: #b5bac6;
-      text-align: center;
-      margin-bottom: 0.5em;
-    }
-    .product-price {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 1em;
-      text-shadow: 0 2px 8px #10b98133;
-    }
-    .buy-btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      padding: 0.7em 1.3em;
-      font-size: 1em;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #ff00d433;
-      transition: background var(--transition), transform var(--transition);
-      margin-bottom: 0.3em;
-    }
-    .buy-btn:hover {
-      background: #1e90ff;
-      transform: scale(1.08);
-    }
-    @media (max-width: 900px) {
-      main { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-    }
-    @media (max-width: 600px) {
-      main { grid-template-columns: 1fr 1fr; }
-      header { flex-direction: column; gap: 1em; }
-    }
-    @media (max-width: 400px) {
-      main { grid-template-columns: 1fr; }
-    }
+    /* --- gentle animations --- */
+    .fade-in {opacity:0;transform:translateY(8px);animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) forwards}
+    .delay-1{animation-delay:.12s}.delay-2{animation-delay:.24s}.delay-3{animation-delay:.36s}
+    @keyframes fadeUp {to{opacity:1;transform:none}}
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">
-      <svg width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="#1e90ff"/><path d="M10 16l6 6 6-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Syklon Service
+    <div class="brand">
+      <div class="logo">S</div>
+      <div>
+        <div class="title">Syklon</div>
+        <div style="font-size:12px;color:var(--muted)">Performance Tools • Server Stability</div>
+      </div>
     </div>
+
     <nav>
-      <a href="#">Home</a>
-      <a href="#">Produkte</a>
-      <a href="#">Über uns</a>
-      <a href="#">Kontakt</a>
+      <a href="#features">Features</a>
+      <a href="#showcase">Showcase</a>
+      <a href="#pricing">Pricing</a>
+      <a class="cta-join" href="#contact">Join Discord</a>
     </nav>
   </header>
-  <main>
-    <!-- Beispiel-Produkte. Kopiere das div "product-card" für weitere Produkte -->
-    <div class="product-card">
-      <div class="product-icon">
-        <!-- Smartphone Icon -->
-        <svg width="40" height="40" fill="none"><rect x="10" y="7" width="20" height="26" rx="4" stroke="#fff" stroke-width="2"/><circle cx="20" cy="29" r="2" fill="#fff"/></svg>
-      </div>
-      <div class="product-title">Aimbot Menu</div>
-      <div class="product-desc">Top-Features.</div>
-      <div class="product-price">€30</div>
-      <a href="https://discord.com/users/942797465764114442" class="buy-btn">Jetzt kaufen</a>
+
+  <section class="hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+
+    <span class="badge fade-in delay-1">Optimiert • Monitoring • Stabilität</span>
+    <h1 class="fade-in delay-2">Boost your <strong>FiveM</strong> server — <br> zuverlässige Performance Tools</h1>
+    <p class="lead fade-in delay-3">Syklon bietet leichtgewichtige, legale Tools zur Optimierung von Server-Performance, Monitoring-Dashboards und UI-Kits für Admins. Kein Cheat-Inhalt — nur Stabilität und UX.</p>
+
+    <div class="hero-ctas fade-in delay-3">
+      <button class="btn primary" onclick="document.getElementById('showcase').scrollIntoView({behavior:'smooth'})">Demo ansehen</button>
+      <button class="btn ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</button>
     </div>
-    <div class="product-card">
-      <div class="product-icon">
-        <!-- Laptop Icon -->
-        <svg width="40" height="40" fill="none"><rect x="9" y="13" width="22" height="12" rx="2" stroke="#fff" stroke-width="2"/><rect x="7" y="25" width="26" height="4" rx="2" stroke="#fff" stroke-width="2"/></svg>
+
+    <div class="glow" aria-hidden="true"></div>
+  </section>
+
+  <section id="showcase" class="showcase">
+    <div class="mock fade-in">
+      <div class="left">
+        <h4>Syklon Console</h4>
+        <div class="item">Realtime CPU / Tick Anzeige</div>
+        <div class="item">Netzwerk-Latenz Übersicht</div>
+        <div class="item">Konfigurations-Exporter (JSON)</div>
       </div>
-      <div class="product-title">Webdesign</div>
-      <div class="product-desc">von basti123dhhfd</div>
-      <div class="product-price">Auf Anfrage</div>
-    <a href="https://discord.com/users/942797465764114442" class="buy-btn">Jetzt kaufen</a>
-    </div>
-    <div class="product-card">
-      <div class="product-icon">
-        <!-- Kopfhörer Icon -->
-        <svg width="40" height="40" fill="none"><circle cx="20" cy="20" r="12" stroke="#fff" stroke-width="2"/><rect x="7" y="17" width="6" height="9" rx="3" fill="#fff"/><rect x="27" y="17" width="6" height="9" rx="3" fill="#fff"/></svg>
+      <div class="content">
+        <div class="stat-row">
+          <div class="stat"><strong>30%</strong><span style="color:var(--muted);font-size:13px">Durchschnittliche Serverlast-Reduktion</span></div>
+          <div class="stat"><strong>99.9%</strong><span style="color:var(--muted);font-size:13px">Stabilitäts-Score</span></div>
+        </div>
+        <div style="color:var(--muted);font-size:14px">Leicht integrierbare Module: optimizer, profiler, live-monitor. Kompatibel mit gängigen Server-Setups.</div>
       </div>
-      <div class="product-title"> Discord Bot</div>
-      <div class="product-desc">Anfrage Nico3768</div>
-      <div class="product-price">Anfrage </div>
-      <a href="https://www.instagram.com/ybastix/" class="buy-btn">Jetzt kaufen</a>
     </div>
-    <div class="product-card">
-      <div class="product-icon">
-        <!-- Fahrrad Icon -->
-        <svg width="40" height="40" fill="none"><circle cx="12" cy="28" r="4" stroke="#fff" stroke-width="2"/><circle cx="28" cy="28" r="4" stroke="#fff" stroke-width="2"/><path d="M12 28L20 14L28 28M20 14V28" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-      <div class="product-title">IT Support</div>
-      <div class="product-desc">Schnell.</div>
-      <div class="product-price">Anfrage</div>
-      <a href="https://www.instagram.com/ybastix/" class="buy-btn">Jetzt kaufen</a>
+  </section>
+
+  <section id="features" class="features" aria-label="Funktionen">
+    <div class="feature fade-in">
+      <h5>Realtime Profiler</h5>
+      <p>Analysiert Tick-Lasten, Script-Engpässe und zeigt Hotspots mit Zeitstempeln an.</p>
     </div>
-    <!-- Weitere Produkte einfach hinzufügen! Icons können angepasst werden -->
-  </main>
+    <div class="feature fade-in delay-1">
+      <h5>Adaptive Optimizer</h5>
+      <p>Passt die Server-Auslastung dynamisch an, priorisiert kritische Tasks und reduziert Frame-Drops.</p>
+    </div>
+    <div class="feature fade-in delay-2">
+      <h5>Monitoring Dashboard</h5>
+      <p>Visualisierte Metriken, Alerts und Exportfunktionen für Logs und Reports.</p>
+    </div>
+    <div class="feature fade-in delay-3">
+      <h5>Admin UI Kit</h5>
+      <p>Fertige, saubere UI-Komponenten (Menüs, Panels, Switches) mit lila Theme zum direkten Einbinden.</p>
+    </div>
+  </section>
+
+  <section id="pricing" style="max-width:1000px;margin:36px auto;padding:0 6%;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+    <div style="min-width:220px;background:var(--panel);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);text-align:left">
+      <h4 style="margin:0 0 8px">Starter</h4>
+      <div style="font-weight:800;font-size:20px">Kostenlos</div>
+      <p style="color:var(--muted);font-size:14px">Basis-Profiler & kleine Dashboard-Funktionen. Für Test-Server.</p>
+      <div style="margin-top:12px"><button class="btn primary" onclick="alert('Anfrage: Starter')">Loslegen</button></div>
+    </div>
+
+    <div style="min-width:220px;background:var(--panel);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);text-align:left">
+      <h4 style="margin:0 0 8px">Pro</h4>
+      <div style="font-weight:800;font-size:20px">8,99 €/Monat</div>
+      <p style="color:var(--muted);font-size:14px">Voller Profiler, Optimizer & Dashboard. Support inkl.</p>
+      <div style="margin-top:12px"><button class="btn primary" onclick="alert('Anfrage: Pro')">Jetzt kaufen</button></div>
+    </div>
+
+    <div style="min-width:220px;background:var(--panel);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);text-align:left">
+      <h4 style="margin:0 0 8px">Enterprise</h4>
+      <div style="font-weight:800;font-size:20px">auf Anfrage</div>
+      <p style="color:var(--muted);font-size:14px">Individuelle Integrationen & Prioritäts-Support.</p>
+      <div style="margin-top:12px"><button class="btn primary" onclick="alert('Anfrage: Enterprise')">Kontakt</button></div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div style="max-width:900px;margin:12px auto;color:var(--muted)">
+      © <strong>Syklon</strong> — Performance Tools für FiveM-Server. Kein Cheat-Content. Fragen? <a href="mailto:kontakt@syklon.example" style="color:var(--muted)">kontakt@syklon.example</a>
+    </div>
+  </footer>
+
+  <script>
+    // kleine Interaktionen: smooth scroll already used by buttons; add small entrance triggers
+    document.addEventListener('DOMContentLoaded', ()=> {
+      // reveal elements with .fade-in when in viewport (simple)
+      const items = document.querySelectorAll('.fade-in');
+      const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.style.animationPlayState = 'running'; e.target.classList.remove('fade-in'); o.unobserve(e.target); }});
+      }, {threshold: 0.08});
+      items.forEach(i => { i.style.animationPlayState = 'paused'; obs.observe(i); });
+    });
+  </script>
 </body>
-</html><!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <title>Bastiiiiisssss – Dein Online-Shop für Technik & mehr</title>
-  <meta name="description" content="Basti Shop: Hier findest du Technik, Gadgets & vieles mehr – direkt vom Experten!">
-  <meta name="keywords" content="Basti Shop, Technik kaufen, Online-Shop, Gadgets, Smartphone, Laptop, Kopfhörer, E-Bike">
-  <meta name="author" content="BastiNeu">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://deinedomain.de/" />
-  <!-- Social Sharing -->
-  <meta property="og:title" content="Basti Shop – Dein Online-Shop für Technik & mehr">
-  <meta property="og:description" content="Basti Shop: Hier findest du Technik, Gadgets & vieles mehr – direkt vom Experten!">
-  <meta property="og:url" content="https://deinedomain.de/">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://deinedomain.de/preview.jpg">
-  <!-- Weitere SEO-Tags hier möglich -->
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <title>Hintergrundbild Beispiel</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background-image: url("https://cdn.discordapp.com/attachments/1049348180040499310/1426190311608287374/Neon_Syklon_Service_in_Lila.png?ex=68ea52bb&is=68e9013b&hm=51c698d1209f30a206bad15099d68532a60322cfc7462202dc822cc2ca68326f&");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
- .button, .buy-button, .btn-kaufen {
-  background-color: #1a061a !important; /* gleiche Farbe wie Hintergrund */
-  color: #fff !important;               /* Weißer Text für gute Lesbarkeit */
-  border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  padding: 12px 32px;
-  border-radius: 24px;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.button:hover, .buy-button:hover, .btn-kaufen:hover {
-  background-color: #2c092c !important; /* etwas heller/dunkler beim Hover */
-}.buy-btn {
-  background-color: #1a061a !important;
-  color: hs#b509e9(236, 100%, 49%) !important
-  /* ...weitere Styles... */
-.buy-btn:hover {
-  background-color: #2c092c !important;
-}<div style="display: flex; gap: 60px;">
-  <!-- Handy -->
-  <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg,#48ff8f 0%, #5d8aff 100%); display:flex; align-items:center; justify-content:center; box-shadow: 0 0 16px #202040;">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="7" y="2" width="10" height="20" rx="2"></rect>
-      <circle cx="12" cy="18" r="1"></circle>
-    </svg>
-  </div>
-  <!-- Laptop -->
-  <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg,#5d8aff 0%, #48ff8f 100%); display:flex; align-items:center; justify-content:center; box-shadow: 0 0 16px #202040;">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="6" width="18" height="12" rx="2"></rect>
-      <path d="M3 18h18"></path>
-    </svg>
-  </div>
-  <!-- Kopfhörer -->
-  <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg,#5d8aff 0%, #48ff8f 100%); display:flex; align-items:center; justify-content:center; box-shadow: 0 0 16px #202040;">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 17v-2a8 8 0 0 1 16 0v2"></path>
-      <rect x="2" y="17" width="4" height="5" rx="1"></rect>
-      <rect x="18" y="17" width="4" height="5" rx="1"></rect>
-    </svg>
-  </div>
-  <!-- E-Bike -->
-  <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg,#5d8aff 0%, #48ff8f 100%); display:flex; align-items:center; justify-content:center; box-shadow: 0 0 16px #202040;">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="5.5" cy="18.5" r="3.5"></circle>
-      <circle cx="18.5" cy="18.5" r="3.5"></circle>
-      <path d="M8 18.5V9H14L19 18.5"></path>
-      <path d="M11 9V6H13V9"></path>
-    </svg>
-  </div>
+</html>
