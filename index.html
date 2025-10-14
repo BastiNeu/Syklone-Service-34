@@ -1,202 +1,132 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Syklon — Performance Tools für FiveM</title>
-  <meta name="description" content="Syklon — Tools zur Performance-Optimierung" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Syklone – PC-Optimierung & FiveM-Support</title>
   <style>
-    /* --- Farben & Grund --- */
-    :root{
-      --bg-dark: #0b0210;
-      --panel: rgba(255,255,255,0.03);
-      --muted: #bfb7d6;
-      --accent-1: #8a4dff;
-      --accent-2: #5f29d6;
-      --glass: rgba(255,255,255,0.04);
-      --radius: 14px;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-dark) 0%, #0a0510 60%);color:#fff;-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}
-    /* --- Header --- */
-    header{display:flex;align-items:center;justify-content:space-between;padding:26px 6%;position:relative;z-index:5}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo{
-      width:48px;height:48px;border-radius:10px;
-      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
-      display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:18px;box-shadow:0 8px 30px rgba(95,41,214,0.18);
+    body {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #f0f0f0;
+      line-height: 1.6;
+      padding: 20px;
     }
-    .brand .title{font-weight:700;font-size:18px;letter-spacing:0.6px}
-    nav{display:flex;gap:20px;align-items:center}
-    nav a{color:var(--muted);font-weight:600;font-size:14px;padding:8px 12px;border-radius:10px}
-    nav a:hover{color:#fff}
-    .cta-join{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));padding:10px 16px;border-radius:999px;font-weight:700;box-shadow:0 8px 30px rgba(138,77,255,0.16)}
-    /* --- Hero --- */
-    .hero{max-width:1160px;margin:40px auto 0;padding:60px 6% 80px;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
-    .hero-grid {
-      position:absolute;inset:0;opacity:0.08;background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 80px 80px, 80px 80px;
-      transform: translateY(-10%);
-      border-radius:24px;pointer-events:none;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(25, 25, 45, 0.85);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    .hero .badge{display:inline-block;padding:8px 14px;border-radius:999px;background:linear-gradient(90deg, rgba(138,77,255,0.12), rgba(95,41,214,0.08));color:var(--accent-1);font-weight:700;font-size:13px}
-    h1{font-size:56px;line-height:1.02;margin:8px 0;color:linear-gradient(90deg,#fff,#eee)} 
-    /* fallback plain color, gradient via overlay below */
-    .hero h1 strong{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
-    p.lead{max-width:860px;color:var(--muted);font-size:16px;margin:0 auto}
-    .hero-ctas{display:flex;gap:14px;margin-top:18px}
-    .btn{padding:12px 18px;border-radius:12px;font-weight:700;border:none;cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:white;box-shadow:0 14px 40px rgba(95,41,214,0.18)}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-    /* subtle glow under hero */
-    .glow{width:70%;height:36px;border-radius:999px;background:radial-gradient(circle at 50% 50%, rgba(138,77,255,0.22), rgba(95,41,214,0.06) 40%, transparent 70%);filter:blur(18px);margin-top:36px}
-    /* --- Showcase mockup --- */
-    .showcase{width:92%;max-width:1100px;margin:36px auto 0;border-radius:18px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:0 30px 60px rgba(4,4,6,0.45);border:1px solid rgba(255,255,255,0.03)}
-    .mock {height:260px;border-radius:12px;background:linear-gradient(180deg,#0f0c14, #0a0810);display:flex;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,0.02)}
-    .mock .left {width:240px;padding:20px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-right:1px solid rgba(255,255,255,0.02)}
-    .mock .left h4{margin:0 0 8px;font-size:15px;color:var(--muted)}
-    .mock .left .item{margin:10px 0;padding:8px;border-radius:10px;background:rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
-    .mock .content{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;justify-content:center}
-    .stat-row{display:flex;gap:12px}
-    .stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;min-width:140px}
-    .stat strong{display:block;font-size:20px}
-    /* --- Features --- */
-    .features{max-width:1100px;margin:48px auto;padding:0 6%;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-    .feature{background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-    .feature h5{margin:0 0 8px;font-size:16px}
-    .feature p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
-    /* --- Footer --- */
-    footer{margin-top:60px;padding:28px 6%;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid rgba(255,255,255,0.02)}
-    /* --- small screens --- */
-    @media (max-width:880px){
-      h1{font-size:34px}
-      .mock{height:220px}
-      header{padding:18px}
-      .hero{padding:40px 6% 60px}
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #4ecca3;
     }
-    /* --- gentle animations --- */
-    .fade-in {opacity:0;transform:translateY(8px);animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) forwards}
-    .delay-1{animation-delay:.12s}.delay-2{animation-delay:.24s}.delay-3{animation-delay:.36s}
-    @keyframes fadeUp {to{opacity:1;transform:none}}
+    .tagline {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      color: #a9a9b8;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 25px 0;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    .stats div {
+      background: rgba(78, 204, 163, 0.15);
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 1px solid #4ecca3;
+    }
+    h2 {
+      color: #4ecca3;
+      margin: 25px 0 15px;
+      font-size: 1.6rem;
+    }
+    ul {
+      padding-left: 20px;
+      margin-bottom: 20px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    .discord-btn {
+      display: block;
+      width: fit-content;
+      margin: 30px auto;
+      padding: 14px 30px;
+      background: #5865F2;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .discord-btn:hover {
+      background: #4752c4;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      .stats {
+        flex-direction: column;
+        gap: 10px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo">
-    <img src="https://cdn.discordapp.com/attachments/1426227615496278096/1426255764791492618/Neon_Syklon_Service_in_Lila.png?ex=68ea8fb0&is=68e93e30&hm=05d0203255d78566b1e3ac4b3d21aaa6fec8ad1554c675f6a3e429c174af9d06&" alt="Firmenlogo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-</div>
-      <div>
-        <div class="title">Syklon</div>
-        <div style="font-size:12px;color:var(--muted)">Performance ToolKits • Pc Support</div>
-      </div>
+  <div class="container">
+    <h1>🛡️ Syklone</h1>
+    <p class="tagline">Dein zuverlässiger PC-Optimierungsservice & FiveM-Support</p>
+
+    <div class="stats">
+      <div>✅ 100 % Sicherheit für deinen PC</div>
+      <div>✅ 99,9 % Systemstabilität</div>
     </div>
 
-    <nav>
-  <a href="#features">Features</a>
-  <a href="#showcase">Showcase</a>
-  <a href="#pricing">Preise</a>
-  <a class="cta-join" href="https://discord.gg/Jgh6hnKD" target="_blank">Join Discord</a>
-</nav>
-  </header>
+    <h2>🧰 Unsere Produkte</h2>
+    <ul>
+      <li><strong>Syklone Menu</strong> – Alles-in-einem: Optimizer, Cache Cleaner & integriertes VPN</li>
+      <li><strong>Optimizer Xylon</strong> – Maximale Leistung für dein System</li>
+      <li><strong>CacheCleaner Nyroxo</strong> – Entfernt temporäre Dateien & beschleunigt deinen PC</li>
+    </ul>
 
-  <section class="hero">
-    <div class="hero-grid" aria-hidden="true"></div>
+    <h2>🎮 FiveM & PC-Support</h2>
+    <p>Probleme mit FiveM? Wir bieten individuelle Integrationen und technische Hilfe – speziell auf deine Konfiguration abgestimmt.</p>
 
-    <span class="badge fade-in delay-1">Pc Fehler Behebung • Discord Support • Fivem Support</span>
-    <h1 class="fade-in delay-2">Problems with <strong>FiveM</strong> Join our Discord — <br> reliable Support</h1>
-    <p class="lead fade-in delay-3">Syklon bietet zuverlässigen Pc Support an. Mehr Infos in unserem discord Server</p>
+    <h2>💬 Support</h2>
+    <p>Rund-um-die-Uhr PC-Support über unseren Discord-Server – inklusive VC-Support (Sprachchat) für schnelle Hilfe.</p>
 
-    <div class="hero-ctas fade-in delay-3">
-      <button class="btn primary" onclick="document.getElementById('showcase').scrollIntoView({behavior:'smooth'})"> Alle Produkte</button>
-      <button class="btn ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</button>
-    </div>
+    <!-- 🔗 Dauerhafter Discord-Link eingefügt -->
+    <a href="https://discord.gg/sJM9JWQuNH" target="_blank" class="discord-btn">
+      ➕ Trete jetzt unserem Discord bei!
+    </a>
 
-    <div class="glow" aria-hidden="true"></div>
-  </section>
-
-  <section id="showcase" class="showcase">
-    <div class="mock fade-in">
-      <div class="left">
-        <h4>Was wir anbieten</h4>
-        <div class="item">Fivem & Pc Support / Pc Probleme beheben</
-        <div class="item"></div>Support über VC
-        <div class="item">Discord Probleme beheben</div>
-      </div>
-      <div class="content">
-        <div class="stat-row">
-          <div class="stat"><strong>100%</strong><span style="color:var(--muted);font-size:13px">Sicherheit Für deinen PC </span></div>
-          <div class="stat"><strong>99.9%</strong><span style="color:var(--muted);font-size:13px">Stabilität</span></div>
-        </div>
-        <div style="color:var(--muted);font-size:14px">Produkte: Pc-Optimizer, Cache Cleaner, VPN-Tool.</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="features" class="features" aria-label="Funktionen">
-    <div class="feature fade-in">
-      <h5>Cyclon Menu (Optimizer, CCleaner, Build-in-VPN)</h5>
-      <p>
-     </p>
-    </div>
-    <div class="feature fade-in delay-1">
-      <h5>Optimizer Xylon</h5>
-      <p></p>
-    </div>
-
-      
-    </div>
-    <div class="feature fade-in delay-3">
-      <h5>CacheCleaner Nyroxo</h5>
-      <p></p>
-    </div>
-  </section>
-
-  <section id="pricing" style="max-width:1000px;margin:36px auto;padding:0 6%;display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
-    <div style="min-width:220px;background:var(--panel);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);text-align:left">
-      <h4 style="margin:0 0 8px">Support</h4>
-      <div style="font-weight:800;font-size:20px">2,99€</div>
-      <p style="color:var(--muted);font-size:14px">Rund um Pc Support.</p>
-      <div style="margin-top:12px"><button class="btn primary" onclick="alert('Anfrage: Starter')">Loslegen</button></div>
-    </div>
-
-    <div style="min-width:220px;background:var(--panel);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);text-align:left">
-      <h4 style="margin:0 0 8px">Cyclone</h4>
-      <div style="font-weight:800;font-size:20px">11,99€ Starter Angebot</div>
-      <p style="color:var(--muted);font-size:14px">Voller Zugriff auf Cyclon, (VC Support).</p>
-      <div style="margin-top:12px"><button class="btn primary" onclick="alert('Anfrage: Pro')">Jetzt kaufen</button></div>
-    </div>
-
-    <div style="min-width:220px;background:var(--panel);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);text-align:left">
-      <h4 style="margin:0 0 8px">Fivem & Pc Suport</h4>
-      <div style="font-weight:800;font-size:20px">auf Anfrage</div>
-      <p style="color:var(--muted);font-size:14px">Individuelle Integrationen & Hilfe mit unseren Produkten.</p>
-      <div style="margin-top:12px"><button class="btn primary" onclick="alert('Anfrage: Enterprise')">Kontakt</button></div>
-    </div>
-  </section>
-
-  <footer id="contact">
-    <div style="max-width:900px;margin:12px auto;color:var(--muted)">
-      © <strong>Syklon</strong> — Performance Tools. Kein Cheat-Content. Fragen? <a href="mailto:kontakt@syklon.example" style="color:var(--muted)">Syklon@buisemail.com</a>
-    </div>
-  </footer>
-
-  <script>
-    // kleine Interaktionen: smooth scroll already used by buttons; add small entrance triggers
-    document.addEventListener('DOMContentLoaded', ()=> {
-      // reveal elements with .fade-in when in viewport (simple)
-      const items = document.querySelectorAll('.fade-in');
-      const obs = new IntersectionObserver((entries, o) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.style.animationPlayState = 'running'; e.target.classList.remove('fade-in'); o.unobserve(e.target); }});
-      }, {threshold: 0.08});
-      items.forEach(i => { i.style.animationPlayState = 'paused'; obs.observe(i); });
-    });
-  </script>
+    <footer>
+      <p>© 2025 Syklone Service. Alle Rechte vorbehalten.</p>
+      <p><em>Hinweis: Wir sammeln keine persönlichen Daten. Keine versteckten Kosten.</em></p>
+    </footer>
+  </div>
 </body>
 </html>
-
-
